@@ -1,17 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { axios } from "axios";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const onLogin = async () => {};
+  const onLogin = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/users/login", user);
+      toast.success("Login succeded");
+      router.push("/profile");
+    } catch (error: any) {
+      console.error("Login failed", error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-center text-white text-2xl">Login</h1>
@@ -19,7 +44,7 @@ export default function LoginPage() {
 
       <label htmlFor="email">email</label>
       <input
-        className="p-1"
+        className="p-1 text-black"
         id="email"
         type="text"
         value={user.email}
@@ -34,7 +59,7 @@ export default function LoginPage() {
 
       <label htmlFor="password">password</label>
       <input
-        className="p-1"
+        className="p-1 text-black"
         id="password"
         type="text"
         value={user.password}
@@ -47,7 +72,9 @@ export default function LoginPage() {
         placeholder="password"
       />
 
-      <button onClick={() => onLogin()}>Singup Here</button>
+      <button onClick={() => onLogin()} disabled={buttonDisabled}>
+        Login Here
+      </button>
       <Link href={"/signup"}>Signup</Link>
     </div>
   );
