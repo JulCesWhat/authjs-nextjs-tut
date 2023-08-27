@@ -27,6 +27,10 @@ export async function POST(request: NextRequest) {
     const newUser = new User({ username, email, password: hashedPassword });
 
     const savedUser = await newUser.save();
+
+    // send verification email
+
+    
     return NextResponse.json({
       message: "User created successfully.",
       success: true,
