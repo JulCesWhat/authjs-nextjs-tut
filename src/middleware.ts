@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/signup", "/login"];
+const PUBLIC_PATHS = ["/signup", "/login", "/verifyemail"];
 const NORMAL_PATHS = ["/"];
 const PRIVATE_PATHS = ["/profile "];
 
@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/profile", "/signup", "/login"],
+  matcher: ["/", "/profile", "/signup", "/login", "/verifyemail"],
 };
